@@ -1,6 +1,13 @@
 import "./App.css";
 
-import { Button, Container, Paper, Slider } from "@mui/material";
+import {
+  Button,
+  Container,
+  FormControlLabel,
+  Paper,
+  Slider,
+  Switch,
+} from "@mui/material";
 import {
   ReactVideoZoom,
   pauseReactVideoZoom,
@@ -8,10 +15,12 @@ import {
 } from "react-video-zoom";
 import { useRef, useState } from "react";
 
-import VideoPath from "./test_video.mp4";
+import VideoPath from "./test_video_3.mp4";
+import VideoPathHD from "./test_video_3_1440.mp4";
 
 function App() {
   const [zoom, setZoom] = useState(1);
+  const [isHQ, setHQ] = useState(false);
 
   const mainVideoRef = useRef<HTMLVideoElement>(null);
   const zoomVideoRef = useRef<HTMLVideoElement>(null);
@@ -27,6 +36,9 @@ function App() {
       <Paper
         sx={{
           padding: "60px",
+          "@media (max-width: 800px)": {
+            padding: "15px",
+          },
           margin: "60px 0",
           textAlign: "center",
           display: "flex",
@@ -38,13 +50,23 @@ function App() {
       >
         <h1 style={{ margin: "0" }}>react-video-zoom</h1>
         <ReactVideoZoom
-          src={VideoPath}
-          width={1000}
+          src={isHQ ? VideoPathHD : VideoPath}
           zoom={zoom}
           refs={refs}
           muted
           loop
         />
+        <div style={{ width: "100%" }}>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isHQ}
+                onChange={(event) => setHQ(event.target.checked)}
+              />
+            }
+            label="Load HQ Video (45 MB)"
+          />
+        </div>
         <div style={{ width: "100%", marginBottom: "15px" }}>
           <Button onClick={() => playReactVideoZoom(refs)}>Play</Button>
           <Button onClick={() => pauseReactVideoZoom(refs)}>Pause</Button>
